@@ -1,0 +1,19 @@
+{
+  "name": "telegraph-kp",
+  "version": "1.0.0",
+  "description": "| [Connecting Webapps to Databases](https://github.com/getfutureproof/fp_guides_wiki/wiki/Connecting-Webapps-to-Databases) | [Docker Compose 101](https://github.com/getfutureproof/fp_guides_wiki/wiki/Docker-Compose-101) | \\",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pujatB/Telegraph-KP.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/pujatB/Telegraph-KP/issues"
+  },
+  "homepage": "https://github.com/pujatB/Telegraph-KP#readme"
+}
