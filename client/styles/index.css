@@ -10,18 +10,50 @@ body { font-family: 'Quicksand', sans-serif; }
     text-align: center;
 }
 
-button { background-color: rgba(202, 202, 228, 0.4); }
 
-input { background-color: rgba(95, 89, 180, 0.4); }
 
-button, input {
-    border: none;
+input {
+    border: transparent;
     margin: 10px;
-    border-radius: 5px;
     padding: 5px 15px;
+    font-size: 2em;
+    outline: transparent;
+}
+label {
+    color: #a9a9a9;
+}
+.titleLabel {
+    font-size: 2em;
+}
+.storyLabel {
+    font-size: 1.2em;
 }
 
-table { width: 100%; }
+#author {
+    color: #a9a9a9;
+}
 
-.delete { color: red; }
-.update { color: green; }
+
+.publish {
+    border:solid 2px black;
+    border-radius: 60px;
+    font-weight: bolder;
+    width: 100px;
+    height:30px;   
+    font-size: medium; 
+
+}
+
+
+
+#new-entry-form {
+    text-align: left;
+    line-height: 5px;
+}
+
+.field {
+    border: transparent;
+}
+/* #author::before {
+    content: " \2219 ";
+} */

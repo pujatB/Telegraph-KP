@@ -1,131 +1,145 @@
 // ********************************************
 // SETUP
-const btn = document.querySelector('#msg-btn');
-const form = document.querySelector('#new-shop-form');
-const shopList = document.querySelector('table');
+const form = document.querySelector("#new-entry-form");
+const camera = document.getElementById("story");
+const cameraIcon = document.querySelector("i");
+const urlImage2 = document.getElementById("urlImage2");
+const image = document.getElementById("image");
+const storyImage = document.getElementById('storyImage')
+const titleLabel = document.getElementById('titleLabel')
+const nameLabel = document.getElementById('nameLabel')
+const storyLabel = document.getElementById('storyLabel')
+
 
 // Bind event listeners
-btn.addEventListener('click', getMessage);
-form.addEventListener('submit', submitItem);
+form.addEventListener("submit", submitItem);
+camera.addEventListener("focus", showCamera);
+cameraIcon.addEventListener("click", cameraClicked);
 
-// Fetch all items as soon as app is loaded
-getAllItems();
+function cameraClicked() {
+  urlImage2.style.display = "block";
+}
+
+function showCamera() {
+  cameraIcon.style.display = "inline";
+}
 
 // ********************************************
 
 // Shop FLOW
-// index
-function getAllItems(){
-    fetch('http://localhost:3000/shop')
-        .then(r => r.json())
-        .then(appendItems)
-        .catch(console.warn)
-};
+//
+window.addEventListener("DOMContentLoaded", getItemByID());
+function getItemByID() {
+  cameraIcon.style.display = "none";
+  urlImage2.style.display = "none";
+  image.style.display = "none";
+  let currentId = sessionStorage.getItem("previousId");
+  let currentUrl = sessionStorage.getItem("previousUrl");
+  console.log("urlImage" + currentUrl)
+  if (currentId) {
+    
+    fetch(`http://localhost:3000/posts/${currentId}`)
+      .then((r) => r.json())
+      .then((data) => {
+        let dt = new Date();
+        const months = [
+          "January",
+          "February",
+          "March",
+          "April",
+          "May",
+          "June",
+          "July",
+          "August",
+          "September",
+          "October",
+          "November",
+          "December",
+        ];
+        document.getElementById("author").value =
+          data.author +
+          " • " +
+          dt.getDate() +
+          " " +
+          months[dt.getMonth()] +
+          ", " +
+          dt.getFullYear();
+        document.getElementById("title").value = data.title;
+        document.getElementById("story").value = data.story;
+        console.log("image" + currentUrl);
+        titleLabel.style.display = "none"
+        nameLabel.style.display = "none"
+        storyLabel.style.display = "none"
+        cameraIcon.style.display = "none"
+        if (currentUrl) {
+          urlImage2.style.display = "none";
+          image.style.display = "block"
+          storyImage.src = currentUrl;
+        }
+      })
+      .catch(console.warn);
+  }
+ 
+}
 
 // create
-function submitItem(e){
-    e.preventDefault();
+function submitItem(e) {
+  e.preventDefault();
+  let storedUrl = e.target.urlImage.value;
+  sessionStorage.setItem("previousUrl", storedUrl);
+  console.log(storedUrl);
+  titleLabel.style.display = "none"
+  nameLabel.style.display = "none"
+  storyLabel.style.display = "none"
+  cameraIcon.style.display = "none"
+  if (storedUrl) {
+    urlImage2.style.display = "none";
+    image.style.display = "block"
+    storyImage.src = storedUrl;
+  }
+  
+  const ourData = {
+    title: e.target.title.value,
+    author: e.target.author.value,
+    story: e.target.story.value,
+  };
 
-    const shopData = {
-        name: e.target.name.value,
-        price: e.target.price.value,
-        stock_left: e.target.stock.value
-    };
+  const options = {
+    method: "POST",
+    body: JSON.stringify(ourData),
+    headers: { "Content-Type": "application/json" },
+  };
 
-    const options = { 
-        method: 'POST',
-        body: JSON.stringify(shopData),
-        headers: { "Content-Type": "application/json" }
-    };
-
-    fetch('http://localhost:3000/shop', options)
-        .then(r => r.json())
-        .then(appendItem)
-        .then(() => e.target.reset())
-        .catch(console.warn)
-};
-
-// function updateDog(id, tr){
-//     const options = { 
-//         method: 'PATCH',
-//     };
-//     fetch(`http://localhost:3000/dogs/${id}`, options)
-//         .then(r => r.json())
-//         .then(data => {
-//             const { dog } = data
-//             tr.querySelectorAll('td')[1].textContent = dog.age
-//         })
-//         .catch(console.warn)
-// }
-
-function deleteItem(id, li){
-    console.log('deleting', id)
-    const options = { 
-        method: 'DELETE',
-    };
-    fetch(`http://localhost:3000/dogs/${id}`, options)
-        .then(li.remove())
-        .catch(console.warn)
+  fetch("http://localhost:3000/posts", options)
+    .then((r) => r.json())
+    .then((data) => {
+      let createdId = data.id;
+      sessionStorage.setItem("previousId", createdId);
+      console.log(createdId);
+      let dt = new Date();
+      const months = [
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December",
+      ];
+      document.getElementById("author").value =
+        data.author +
+        " • " +
+        dt.getDate() +
+        " " +
+        months[dt.getMonth()] +
+        ", " +
+        dt.getFullYear();
+    })
+    .catch(console.warn);
 }
 
-// helpers
-function appendItems(data){
-    data.items.forEach(appendItem);
-};
-
-function appendItem(itemData){
-    const newRow = document.createElement('tr');
-    const itemLi = formatItemTr(itemData, newRow)
-    shopList.append(newRow);
-};
-
-
-function formatItemTr(item, tr){
-    const nameTd = document.createElement('td');
-    const priceTd = document.createElement('td');
-    const stockTd = document.createElement('td');
-
-    const delTd = document.createElement('td');
-    const uptTd = document.createElement('td');
-    const delBtn = document.createElement('button');
-    const uptBtn = document.createElement('button');
-
-    delBtn.setAttribute('class', 'delete')
-    uptBtn.setAttribute('class', 'update')
-    delBtn.textContent = 'X';
-    // uptBtn.textContent = '+';
-    delBtn.onclick = () => deleteItem(item.id, tr);
-    // uptBtn.onclick = () => updateDog(item.id, tr);
-    delTd.append(delBtn);
-    // uptTd.append(uptBtn);
-
-    nameTd.textContent = item.name
-    priceTd.textContent = item.price
-    stockTd.textContent = item.stock_left
-
-    tr.append(nameTd)
-    tr.append(priceTd)
-    tr.append(stockTd)
-    tr.append(delTd)
-    tr.append(uptTd)
-
-    return tr
-}
-
-// ********************************************
-
-// MESSAGE FLOW
-function getMessage(){
-    fetch('http://localhost:3000')
-        .then(r => r.text())
-        .then(renderMessage)
-        .catch(console.warn)
-};
-
-function renderMessage(msgText){
-    document.querySelector('#msg-btn').textContent = msgText;
-};
-
-
-
-// ********************************************

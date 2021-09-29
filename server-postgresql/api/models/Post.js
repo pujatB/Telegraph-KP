@@ -5,9 +5,7 @@ class Tele {
         this.id = data.id;
         this.title = data.title;
         this.author = data.author;
-        this.messagePost = data.messagePost;
-        console.log(data.author)
-        console.log("message: " + data.messagePost)
+        this.story = data.story;
     };
 
     static findById (id) {
@@ -15,7 +13,6 @@ class Tele {
             try {
                 let teleData = await db.query(`SELECT * FROM telegraph WHERE id = $1;`, [ id ]);
                 let post = new Tele(teleData.rows[0]);
-                console.log("post" + post)
                 resolve (post);
             } catch (err) {
                 reject('Post not found');
@@ -37,10 +34,10 @@ class Tele {
     
 
 
-    static create(title, author, messagePost){
+    static create(title, author, story){
         return new Promise (async (resolve, reject) => {
             try {
-                let postData = await db.query(`INSERT INTO telegraph (title, author, messagePost) VALUES ($1, $2, $3) RETURNING *;`, [ title, author, messagePost ]);
+                let postData = await db.query(`INSERT INTO telegraph (title, author, story) VALUES ($1, $2, $3) RETURNING *;`, [ title, author, story ]);
                 let newPost = new Tele(postData.rows[0]);
                 resolve (newPost);
             } catch (err) {
@@ -49,28 +46,7 @@ class Tele {
         });
     }
 
-//     update() {
-//         return new Promise (async (resolve, reject) => {
-//             try {
-//                 let updatedDogData = await db.query(`UPDATE dogs SET age = age + 1 WHERE id = $1 RETURNING *;`, [ this.id ]);
-//                 let updatedDog = new Dog(updatedDogData.rows[0]);
-//                 resolve (updatedDog);
-//             } catch (err) {
-//                 reject('Error updating dog');
-//             }
-//         });
-//     }
 
-//     destroy(){
-//         return new Promise(async(resolve, reject) => {
-//             try {
-//                 await db.query(`DELETE FROM dogs WHERE id = $1;`, [ this.id ]);
-//                 resolve('Dog was deleted')
-//             } catch (err) {
-//                 reject('Dog could not be deleted')
-//             }
-//         })
-//     }
 
  }
 

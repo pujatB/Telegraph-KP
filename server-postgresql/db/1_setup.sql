@@ -4,6 +4,6 @@ CREATE TABLE telegraph (
     id SERIAL PRIMARY KEY,
     title varchar(100),
     author varchar(100),
-    messagePost varchar(255)
+    story varchar(255)
 );
 
